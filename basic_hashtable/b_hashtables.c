@@ -88,12 +88,11 @@ void hash_table_insert(BasicHashTable *ht, char *key, char *value)
   unsigned int hashed_key = hash(key, ht->capacity);
   Pair *new_pair = create_pair(key, value);
   if(ht->storage[hashed_key]) {
-    printf("You are overwriting an existing key!");
+    Pair *cur_val = ht->storage[hashed_key];
     ht->storage[hashed_key] = new_pair;
+    free(cur_val);
   }
-  ht->storage[hashed_key] = new_pair;
-  printf("%s", value);
-  
+  ht->storage[hashed_key] = new_pair;  
 }
 
 /****
@@ -103,7 +102,12 @@ void hash_table_insert(BasicHashTable *ht, char *key, char *value)
  ****/
 void hash_table_remove(BasicHashTable *ht, char *key)
 {
-
+  unsigned int find_hash = hash(key, ht->capacity);
+  if(!ht->storage[find_hash]){
+    printf("Key not in hash table!");
+  }
+  free(ht->storage[find_hash]);
+  return 0;
 }
 
 /****
@@ -113,6 +117,10 @@ void hash_table_remove(BasicHashTable *ht, char *key)
  ****/
 char *hash_table_retrieve(BasicHashTable *ht, char *key)
 {
+  unsigned int find_hash = hash(key, ht->capacity);
+  if(ht->storage[find_hash]) {
+    return ht->storage[find_hash];
+  }
   return NULL;
 }
 
